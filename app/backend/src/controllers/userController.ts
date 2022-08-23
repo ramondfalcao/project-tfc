@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import UserService from '../services/userService';
 
 class UserController {
-  static loginValidate: any;
-  static login: any;
   constructor(private userService: UserService) {}
 
   async login(req: Request, res: Response): Promise<void> {
