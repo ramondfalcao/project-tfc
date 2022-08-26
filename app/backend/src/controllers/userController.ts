@@ -6,14 +6,14 @@ class UserController {
 
   async login(req: Request, res: Response): Promise<void> {
     const validate = this.userService.validateReqBody(req.body);
-    console.log(validate);
     const token = await this.userService.login(validate);
     res.status(200).json({ token });
   }
 
   async loginValidate(req: Request, res: Response): Promise<void> {
     const token = String(req.headers.authorization);
-    const role = await this.userService.loginValidate(token);
+    const tokenToString = String(token);
+    const role = await this.userService.loginValidate(tokenToString);
     res.status(200).json({ role });
   }
 }

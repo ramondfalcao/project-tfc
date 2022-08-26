@@ -1,7 +1,7 @@
 import { compareSync } from 'bcryptjs';
 import * as Joi from 'joi';
 import User from '../database/models/user';
-import UserLogin from '../interfaces/userLogin';
+import UserLogin from '../interfaces/IUserLogin';
 import JwtService from './jwtService';
 
 class UserService {
@@ -16,7 +16,9 @@ class UserService {
     });
     const { error, value } = schema.validate(data);
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return value;
   };
