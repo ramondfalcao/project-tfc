@@ -2,6 +2,7 @@ import * as express from 'express';
 import errorMiddleware from './middlewares/errorMiddleware';
 import userRouter from './routes/userRouter';
 import 'express-async-errors';
+import teamRouter from './routes/teamRouter';
 
 class App {
   public app: express.Express;
@@ -14,6 +15,7 @@ class App {
     // Não remover essa rota teste avaliador remoto
     this.app.get('/', (req, res) => res.json({ ok: true }));
     this.app.use('/login', userRouter);
+    this.app.use('/teams', teamRouter);
 
     this.app.use(errorMiddleware);
   }
