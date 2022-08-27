@@ -4,7 +4,7 @@ import User from '../interfaces/IUser';
 
 class JwtService {
   static sign(data: { email: string, password: string }): string {
-    return sign({ data }, process.env.JWT_SECRET || 'jwt_secret');
+    return sign(data, process.env.JWT_SECRET || 'jwt_secret');
   }
 
   static tokenValidation(token: string) {

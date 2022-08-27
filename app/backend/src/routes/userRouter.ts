@@ -7,6 +7,6 @@ const userController = new UserController(new UserService());
 const userRouter = Router();
 
 userRouter.post('/', (req, res) => userController.login(req, res));
-userRouter.get('/validate', (req, res) => userController.loginValidate(req, res));
+userRouter.get('/validate', (req, res) => userController.validation(req, res));
 
 export default userRouter;
