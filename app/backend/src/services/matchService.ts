@@ -23,6 +23,26 @@ class MatchService {
     ] });
     return result;
   };
+
+  public create = async (match: Match) => {
+    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = match;
+    if (homeTeam === awayTeam) {
+      const err = new Error('It is not possible to create a match with two equal teams');
+      err.name = 'Unauthorized';
+      throw err;
+    }
+    const homeTeamId = await Teams.findByPk(homeTeam);
+    const awayTeamId = await Teams.findByPk(awayTeam);
+    if (!homeTeamId || !awayTeamId) {
+      const err = new Error('There is no team with such id!');
+      err.name = 'NotFoundError';
+      throw err;
+    }
+    const result = await this.modelMatch.create({
+      homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress: true,
+    });
+    return result;
+  };
 }
 
 export default MatchService;
