@@ -18,6 +18,7 @@ module.exports = {
           model: 'teams',
           key: 'id',
         },
+      },
         homeTeamGoals: {
           type: Sequelize.INTEGER,
           allowNull: false,
@@ -44,7 +45,7 @@ module.exports = {
           field: 'in_progress',
         }
       },
-    })
+    )
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('matches');

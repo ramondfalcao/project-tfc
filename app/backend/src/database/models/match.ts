@@ -42,7 +42,7 @@ Match.init({
   inProgress: {
     type: BOOLEAN,
     allowNull: false,
-    field: 'in_Progress',
+    field: 'in_progress',
   },
 }, {
   underscored: true,
@@ -51,9 +51,10 @@ Match.init({
   timestamps: false,
 });
 
-Match.belongsTo(Teams, { foreignKey: 'home_team', as: 'teamHome' });
-Match.belongsTo(Teams, { foreignKey: 'away_team', as: 'teamAway' });
+Match.belongsTo(Teams, { foreignKey: 'home_team', targetKey: 'id', as: 'teamHome' });
+Match.belongsTo(Teams, { foreignKey: 'away_team', targetKey: 'id', as: 'teamAway' });
 
-Teams.hasMany(Match, { foreignKey: 'id', as: 'matches' });
+Teams.hasMany(Match, { foreignKey: 'home_team', sourceKey: 'id', as: 'homeMatches' });
+Teams.hasMany(Match, { foreignKey: 'away_team', sourceKey: 'id', as: 'awayMatches' });
 
 export default Match;
