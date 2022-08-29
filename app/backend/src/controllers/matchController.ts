@@ -17,9 +17,15 @@ export default class MatchController {
     res.status(201).json(result);
   };
 
-  public updateInProgress = async (req: Request, res: Response) => {
+  public updateMatchFinish = async (req: Request, res: Response) => {
     const { id } = req.params;
-    await this.matchService.updateInProgress(Number(id));
+    await this.matchService.updateMatchFinish(Number(id));
     res.status(200).json({ message: 'Finished' });
+  };
+
+  public updateMatchInProgress = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await this.matchService.updateMatchInProgress({ id, ...req.body });
+    res.status(200).json({ message: 'success' });
   };
 }

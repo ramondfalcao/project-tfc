@@ -7,4 +7,13 @@ interface IMatch {
   inProgress: boolean,
 }
 
-export default IMatch;
+interface IMatchUpdate {
+  id?: number,
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
+
+export {
+  IMatch,
+  IMatchUpdate,
+};

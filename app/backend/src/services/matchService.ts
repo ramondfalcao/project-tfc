@@ -1,4 +1,4 @@
-import IMatch from '../interfaces/IMatch';
+import { IMatch, IMatchUpdate } from '../interfaces/IMatch';
 import Match from '../database/models/match';
 import Teams from '../database/models/team';
 
@@ -43,8 +43,15 @@ class MatchService {
     return result;
   };
 
-  public updateInProgress = async (id: number) => {
+  public updateMatchFinish = async (id: number) => {
     const result = await this.modelMatch.update({ inProgress: false }, { where: { id } });
+    return result;
+  };
+
+  public updateMatchInProgress = async (matchUpdate: IMatchUpdate) => {
+    const { id, homeTeamGoals, awayTeamGoals } = matchUpdate;
+    const result = await this.modelMatch.update({
+      homeTeamGoals, awayTeamGoals }, { where: { id } });
     return result;
   };
 }
