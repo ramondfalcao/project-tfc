@@ -25,8 +25,9 @@ class MatchService {
   };
 
   public create = async (match: Match) => {
-    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = match;
+    const { homeTeam, awayTeam } = match;
     if (homeTeam === awayTeam) {
+      console.log('teste');
       const err = new Error('It is not possible to create a match with two equal teams');
       err.name = 'Unauthorized';
       throw err;
@@ -38,9 +39,12 @@ class MatchService {
       err.name = 'NotFoundError';
       throw err;
     }
-    const result = await this.modelMatch.create({
-      homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress: true,
-    });
+    const result = await this.modelMatch.create({ ...match, inProgress: true });
+    return result;
+  };
+
+  public updateInProgress = async (id: number) => {
+    const result = await this.modelMatch.update({ inProgress: false }, { where: { id } });
     return result;
   };
 }
