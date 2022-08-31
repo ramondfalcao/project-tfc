@@ -6,20 +6,19 @@ class LeaderboardService {
   modelTeams = Teams;
 
   static tiebreaker(leaderboard: any[]) {
-    const result = leaderboard
-      .sort(
-        (a, b) => (b.totalPoints - a.totalPoints)
+    const result = leaderboard.sort(
+      (a, b) => (b.totalPoints - a.totalPoints)
       || (b.totalVictories - a.totalVictories)
       || (b.goalsBalance - a.goalsBalance)
-      || (b.totalFavor - a.totalFavor)
-      || (b.totalOwn - a.totalOwn),
-      );
+      || (b.goalsFavor - a.goalsFavor)
+      || (b.goalsOwn - a.goalsOwn),
+    );
 
     return result;
   }
 
   public generateLeaderboard = async (data: any[]) => {
-    const leaderboard = data.map((el: any) => {
+    const leaderboard = data.map((el) => {
       const points = UtilsLearderboard.calcTotalPoints(el.homeMatches);
       return {
         name: el.teamName,

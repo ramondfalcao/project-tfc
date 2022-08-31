@@ -1,8 +1,6 @@
 import Match from '../database/models/match';
-import Teams from '../database/models/team';
 
 class UtilsLearderboard {
-  modelTeams = Teams;
   static calcTotalPoints(match: Match[]): number {
     const result = match
       .reduce((acc: number, curr: { homeTeamGoals: number; awayTeamGoals: number; }) => {
