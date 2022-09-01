@@ -1,14 +1,20 @@
 import Match from '../database/models/match';
 
 class UtilsLearderboard {
-  static calcTotalPoints(match: Match[]): number {
+  static calcTotalPoints(match: Match[], homeOrAway: string): number {
     const result = match
       .reduce((acc: number, curr: { homeTeamGoals: number; awayTeamGoals: number; }) => {
         let totalPoints = acc;
         const { homeTeamGoals, awayTeamGoals } = curr;
-        if (homeTeamGoals > awayTeamGoals) {
+        if (homeOrAway === 'home' && homeTeamGoals > awayTeamGoals) {
           totalPoints += 3;
-        } else if (homeTeamGoals === awayTeamGoals) {
+        } else if (homeOrAway === 'home' && homeTeamGoals === awayTeamGoals) {
+          totalPoints += 1;
+        }
+
+        if (homeOrAway === 'away' && awayTeamGoals > homeTeamGoals) {
+          totalPoints += 3;
+        } else if (homeOrAway === 'away' && awayTeamGoals === homeTeamGoals) {
           totalPoints += 1;
         }
         return totalPoints;
@@ -17,11 +23,15 @@ class UtilsLearderboard {
     return result;
   }
 
-  static calcTotalWins(match: Match[]): number {
+  static calcTotalWins(match: Match[], homeOrAway: string): number {
     const result = match.reduce((acc, curr) => {
       let totalWins = acc;
       const { homeTeamGoals, awayTeamGoals } = curr;
-      if (homeTeamGoals > awayTeamGoals) {
+      if (homeOrAway === 'home' && homeTeamGoals > awayTeamGoals) {
+        totalWins += 1;
+      }
+
+      if (homeOrAway === 'away' && awayTeamGoals > homeTeamGoals) {
         totalWins += 1;
       }
       return totalWins;
@@ -41,11 +51,15 @@ class UtilsLearderboard {
     return result;
   }
 
-  static calcTotalLosses(match: Match[]): number {
+  static calcTotalLosses(match: Match[], homeOrAway: string): number {
     const result = match.reduce((acc, curr) => {
       let totalLosses = acc;
       const { homeTeamGoals, awayTeamGoals } = curr;
-      if (homeTeamGoals < awayTeamGoals) {
+      if (homeOrAway === 'home' && homeTeamGoals < awayTeamGoals) {
+        totalLosses += 1;
+      }
+
+      if (homeOrAway === 'away' && awayTeamGoals < homeTeamGoals) {
         totalLosses += 1;
       }
       return totalLosses;
@@ -53,18 +67,20 @@ class UtilsLearderboard {
     return result;
   }
 
-  static calcGoalsFavor(match: Match[]): number {
+  static calcGoalsFavor(match: Match[], homeOrAway: string): number {
     let goalFavor = 0;
     match.forEach((el) => {
-      goalFavor += el.homeTeamGoals;
+      if (homeOrAway === 'home') goalFavor += el.homeTeamGoals;
+      if (homeOrAway === 'away') goalFavor += el.awayTeamGoals;
     });
     return goalFavor;
   }
 
-  static calcGoalsOwn(match: Match[]): number {
+  static calcGoalsOwn(match: Match[], homeOrAway: string): number {
     let goalOwn = 0;
     match.forEach((el) => {
-      goalOwn += el.awayTeamGoals;
+      if (homeOrAway === 'away') goalOwn += el.homeTeamGoals;
+      if (homeOrAway === 'home') goalOwn += el.awayTeamGoals;
     });
     return goalOwn;
   }

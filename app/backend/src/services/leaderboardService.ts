@@ -17,18 +17,18 @@ class LeaderboardService {
     return result;
   }
 
-  public generateLeaderboard = async (data: any[]) => {
+  public generateLeaderboardHome = async (data: any[]) => {
     const leaderboard = data.map((el) => {
-      const points = UtilsLearderboard.calcTotalPoints(el.homeMatches);
+      const points = UtilsLearderboard.calcTotalPoints(el.homeMatches, 'home');
       return {
         name: el.teamName,
-        totalPoints: UtilsLearderboard.calcTotalPoints(el.homeMatches),
+        totalPoints: UtilsLearderboard.calcTotalPoints(el.homeMatches, 'home'),
         totalGames: el.homeMatches.length,
-        totalVictories: UtilsLearderboard.calcTotalWins(el.homeMatches),
+        totalVictories: UtilsLearderboard.calcTotalWins(el.homeMatches, 'home'),
         totalDraws: UtilsLearderboard.calcTotalDraws(el.homeMatches),
-        totalLosses: UtilsLearderboard.calcTotalLosses(el.homeMatches),
-        goalsFavor: UtilsLearderboard.calcGoalsFavor(el.homeMatches),
-        goalsOwn: UtilsLearderboard.calcGoalsOwn(el.homeMatches),
+        totalLosses: UtilsLearderboard.calcTotalLosses(el.homeMatches, 'home'),
+        goalsFavor: UtilsLearderboard.calcGoalsFavor(el.homeMatches, 'home'),
+        goalsOwn: UtilsLearderboard.calcGoalsOwn(el.homeMatches, 'home'),
         goalsBalance: UtilsLearderboard.calcGoalsBalance(el.homeMatches),
         efficiency: UtilsLearderboard.calcEfficiency(points, el.homeMatches.length),
       };
@@ -38,14 +38,41 @@ class LeaderboardService {
     return rankingLeaderboard;
   };
 
-  public list = async () => {
-    const teamsAndMatches = await this.modelTeams
+  public generateLeaderboardAway = async (data: any[]) => {
+    const leaderboard = data.map((el) => {
+      const points = UtilsLearderboard.calcTotalPoints(el.awayMatches, 'away');
+      return {
+        name: el.teamName,
+        totalPoints: UtilsLearderboard.calcTotalPoints(el.awayMatches, 'away'),
+        totalGames: el.awayMatches.length,
+        totalVictories: UtilsLearderboard.calcTotalWins(el.awayMatches, 'away'),
+        totalDraws: UtilsLearderboard.calcTotalDraws(el.awayMatches),
+        totalLosses: UtilsLearderboard.calcTotalLosses(el.awayMatches, 'away'),
+        goalsFavor: UtilsLearderboard.calcGoalsFavor(el.awayMatches, 'away'),
+        goalsOwn: UtilsLearderboard.calcGoalsOwn(el.awayMatches, 'away'),
+        goalsBalance: UtilsLearderboard.calcGoalsBalance(el.awayMatches),
+        efficiency: UtilsLearderboard.calcEfficiency(points, el.awayMatches.length),
+      };
+    });
+
+    const rankingLeaderboard = LeaderboardService.tiebreaker(leaderboard);
+    return rankingLeaderboard;
+  };
+
+  public list = async (leaderboard: string) => {
+    const homeTeams = await this.modelTeams
       .findAll({ include: [
         { model: Match, as: 'homeMatches', where: { inProgress: false } },
+      ] });
+
+    const awayTeams = await this.modelTeams
+      .findAll({ include: [
         { model: Match, as: 'awayMatches', where: { inProgress: false } },
       ] });
-    const result = this.generateLeaderboard(teamsAndMatches);
-    return result;
+
+    if (leaderboard === 'home') return this.generateLeaderboardHome(homeTeams);
+
+    if (leaderboard === 'away') return this.generateLeaderboardAway(awayTeams);
   };
 }
 
